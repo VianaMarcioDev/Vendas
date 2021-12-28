@@ -5,6 +5,13 @@ public class Cliente {
     private Integer id;
     private String nome;
 
+    public Cliente() {
+    }
+
+    public Cliente(String nome) {
+        this.nome = nome;
+    }
+
     public Integer getId() {
         return id;
     }

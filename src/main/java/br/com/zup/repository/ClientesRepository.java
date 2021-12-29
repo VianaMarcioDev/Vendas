@@ -15,6 +15,7 @@ public class ClientesRepository {
 
     private static String INSERT = "insert into cliente (nome) values (?)";
     private static String SELECT_ALL = "select * from cliente";
+    private static String UPDATE = "UPDATE cliente SET nome = ? WHERE id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -31,8 +32,15 @@ public class ClientesRepository {
         return jdbcTemplate.query(SELECT_ALL, new RowMapper<Cliente>() {
             @Override
             public Cliente mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Cliente(rs.getString("nome"));
+                Integer id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                return new Cliente(id, nome);
             }
         });
+    }
+
+    public Cliente atualizar(Cliente cliente){
+        jdbcTemplate.update(UPDATE, new Object[]{cliente.getNome(), cliente.getId()});
+        return cliente;
     }
 }

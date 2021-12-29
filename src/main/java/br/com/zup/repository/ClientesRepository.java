@@ -29,15 +29,23 @@ public class ClientesRepository {
         return cliente;
     }
 
+    public List<Cliente> buscarPorNome(String nome){
+        return jdbcTemplate.query(SELECT_ALL.concat("WHERE nome like ?"), new Object[]{"%" + nome + "%"} ,getClienteRowMapper() );
+    }
+
     public List<Cliente> listarTodosClientes(){
-        return jdbcTemplate.query(SELECT_ALL, new RowMapper<Cliente>() {
+        return jdbcTemplate.query(SELECT_ALL, getClienteRowMapper());
+    }
+
+    private RowMapper<Cliente> getClienteRowMapper() {
+        return new RowMapper<Cliente>() {
             @Override
             public Cliente mapRow(ResultSet rs, int rowNum) throws SQLException {
                 Integer id = rs.getInt("id");
                 String nome = rs.getString("nome");
                 return new Cliente(id, nome);
             }
-        });
+        };
     }
 
     public Cliente atualizar(Cliente cliente){
